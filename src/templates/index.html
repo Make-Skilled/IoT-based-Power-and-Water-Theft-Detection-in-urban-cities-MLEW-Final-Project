@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IoT-Based Power and Water Theft Detection for Urban Cities</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+
+  <!-- Navbar Section -->
+  <nav class="bg-gradient-to-r from-teal-800 to-teal-600 text-white py-6 px-8 shadow-md fixed w-full z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <!-- Logo or Project Title -->
+      <a href="/" class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500">IoT Theft Detection</a>
+
+      <!-- Nav Links -->
+      <div class="space-x-6 hidden md:flex">
+        <a href="/" class="hover:text-teal-300 transition">Home</a>
+        <a href="#about" class="hover:text-teal-300 transition">About</a>
+        <a href="#features" class="hover:text-teal-300 transition">Features</a>
+        <a href="#get-started" class="hover:text-teal-300 transition">Get Started</a>
+        <a href="/login" class="hover:text-teal-300 transition">Login</a>
+        <a href="/logout" class="hover:text-teal-300 transition">Logout</a>
+      </div>
+
+      <!-- Mobile Menu (Hamburger) -->
+      <div class="md:hidden">
+        <button class="text-white" id="mobile-menu-button">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12h18M3 6h18M3 18h18"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Dropdown -->
+    <div class="md:hidden hidden" id="mobile-menu">
+      <a href="/" class="block py-2 px-4 text-white hover:bg-teal-700">Home</a>
+      <a href="#about" class="block py-2 px-4 text-white hover:bg-teal-700">About</a>
+      <a href="#features" class="block py-2 px-4 text-white hover:bg-teal-700">Features</a>
+      <a href="#get-started" class="block py-2 px-4 text-white hover:bg-teal-700">Get Started</a>
+      <a href="/login" class="block py-2 px-4 text-white hover:bg-teal-700">Login</a>
+      <a href="/logout" class="block py-2 px-4 text-white hover:bg-teal-700">Logout</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="bg-gradient-to-r from-teal-700 to-teal-800 text-center py-36 px-8">
+    <h1 class="text-6xl font-extrabold leading-tight mb-6 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-pink-600">IoT Power & Water Theft Detection</h1>
+    <p class="text-2xl text-gray-200 mb-6">Smart Resource Management for Safer, Sustainable Cities</p>
+    <a href="#get-started" class="bg-gradient-to-r from-green-400 to-blue-500 text-white py-4 px-10 rounded-lg text-xl hover:bg-gradient-to-r hover:from-green-500 hover:to-blue-600 transition duration-300">Get Started</a>
+  </header>
+
+  <!-- About Section -->
+  <section id="about" class="py-28 px-8 bg-gray-800 text-center">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-4xl font-bold text-teal-400 mb-6">About the Project</h2>
+      <p class="text-lg text-gray-300 leading-relaxed">
+        The IoT-based Power and Water Theft Detection system provides a powerful solution to monitor urban infrastructure. By using smart sensors, real-time data is gathered to detect power and water theft, misuse, and leakage. The system securely stores data using blockchain, ensuring accurate, transparent, and tamper-proof records. This project aims to enhance city-wide resource management and prevent losses caused by unauthorized usage.
+      </p>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="py-28 bg-gray-900">
+    <div class="max-w-7xl mx-auto text-center">
+      <h2 class="text-4xl font-bold text-teal-400 mb-12">Key Features</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-16">
+        
+        <!-- Feature 1 -->
+        <div class="p-8 bg-teal-900 rounded-lg shadow-xl transform hover:scale-105 transition duration-300">
+          <h3 class="text-xl font-semibold text-yellow-400 mb-4">Real-Time Theft Detection</h3>
+          <p class="text-gray-300">Instantly detect power and water theft with advanced IoT sensors and minimize resource wastage.</p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="p-8 bg-teal-900 rounded-lg shadow-xl transform hover:scale-105 transition duration-300">
+          <h3 class="text-xl font-semibold text-yellow-400 mb-4">Leak and Theft Alerts</h3>
+          <p class="text-gray-300">Receive real-time notifications whenever an anomaly, such as theft or leakage, is detected.</p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="p-8 bg-teal-900 rounded-lg shadow-xl transform hover:scale-105 transition duration-300">
+          <h3 class="text-xl font-semibold text-yellow-400 mb-4">Blockchain Security</h3>
+          <p class="text-gray-300">Secure data storage on blockchain ensures transparency and tamper-proof records for city utilities.</p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="p-8 bg-teal-900 rounded-lg shadow-xl transform hover:scale-105 transition duration-300">
+          <h3 class="text-xl font-semibold text-yellow-400 mb-4">Automated Reports</h3>
+          <p class="text-gray-300">Generate automated, detailed reports on resource usage, theft incidents, and maintenance schedules.</p>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="p-8 bg-teal-900 rounded-lg shadow-xl transform hover:scale-105 transition duration-300">
+          <h3 class="text-xl font-semibold text-yellow-400 mb-4">Efficient Resource Management</h3>
+          <p class="text-gray-300">Optimize resource distribution, reduce waste, and make informed decisions for better urban planning.</p>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="p-8 bg-teal-900 rounded-lg shadow-xl transform hover:scale-105 transition duration-300">
+          <h3 class="text-xl font-semibold text-yellow-400 mb-4">Seamless Integration</h3>
+          <p class="text-gray-300">Integrate smoothly with existing infrastructure for minimal disruption and enhanced utility management.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action Section -->
+  <section id="get-started" class="bg-gradient-to-r from-green-400 to-teal-600 py-20 text-center text-white">
+    <h2 class="text-4xl font-bold mb-6">Join the Fight Against Theft and Waste!</h2>
+    <p class="text-xl mb-8">Help create smarter, more efficient cities with IoT-based theft detection. Protect valuable resources and ensure sustainable management.</p>
+    <a href="/signup" class="bg-teal-700 text-white py-4 px-10 rounded-lg text-xl hover:bg-teal-800 transition duration-300">Sign Up Now</a>
+  </section>
+
+  <!-- Footer Section -->
+  <footer class="bg-gray-800 text-white py-10">
+    <div class="max-w-7xl mx-auto text-center">
+      <p class="text-sm">&copy; 2025 IoT Theft Detection. All Rights Reserved.</p>
+      <div class="mt-6">
+        <a href="https://twitter.com" class="text-teal-400 hover:text-teal-500 mx-4">Twitter</a>
+        <a href="https://facebook.com" class="text-teal-400 hover:text-teal-500 mx-4">Facebook</a>
+        <a href="https://linkedin.com" class="text-teal-400 hover:text-teal-500 mx-4">LinkedIn</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile menu toggle
+    const menuButton = document.getElementById("mobile-menu-button");
+    const mobileMenu = document.getElementById("mobile-menu");
+
+    menuButton.addEventListener("click", () => {
+      mobileMenu.classList.toggle("hidden");
+    });
+  </script>
+
+</body>
+</html>

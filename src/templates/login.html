@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - IoT & Blockchain</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom Styling for a Sleek, Modern, and Attractive Design */
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(45deg, #2c3e50, #4ca1af); /* Dark Gradient Background */
+      background-size: 400% 400%;
+      animation: gradientAnimation 15s ease infinite; /* Animation for Background */
+    }
+
+    /* Keyframe animation for background gradient */
+    @keyframes gradientAnimation {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .login-container {
+      background: rgba(255, 255, 255, 0.8); /* Slightly Transparent White */
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      border-radius: 15px;
+      padding: 40px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #333;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      text-align: left;
+      font-weight: 600;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px 16px;
+      margin-top: 8px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    .input-group input:focus {
+      border-color: #4CAF50;
+      box-shadow: 0 0 10px rgba(76, 175, 80, 0.6);
+    }
+
+    .login-btn {
+      background: #4CAF50;
+      color: white;
+      padding: 14px;
+      width: 100%;
+      border-radius: 8px;
+      font-weight: 600;
+      text-transform: uppercase;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s ease;
+    }
+
+    .login-btn:hover {
+      background-color: #45a049;
+    }
+
+    .login-btn:focus {
+      outline: none;
+      box-shadow: 0 0 8px rgba(76, 175, 80, 0.7);
+    }
+
+    .signup-text {
+      margin-top: 16px;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .signup-link {
+      color: #00B5E2;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .signup-link:hover {
+      color: #4CAF50;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <h1>Login to IoT & Blockchain</h1>
+    <form action="/loginForm" method="post">
+      
+      <!-- Username Input -->
+      <div class="input-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="Enter your username" required />
+      </div>
+
+      <!-- Password Input -->
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required />
+      </div>
+
+      <!-- Login Button -->
+      <button type="submit" class="login-btn">Login</button>
+    </form>
+
+    <!-- Message -->
+    <div class="text-center mt-4">
+      <span class="text-red-500">{{ message }}</span>
+    </div>
+
+    <!-- Signup Prompt -->
+    <div class="signup-text text-center">
+      <p>Don't have an account? <a href="signup" class="signup-link">Sign up here</a>.</p>
+    </div>
+  </div>
+
+</body>
+</html>
