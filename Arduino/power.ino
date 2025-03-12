@@ -2,15 +2,29 @@
 #include <WiFiClient.h>
 #include <ThingSpeak.h>
 #include <EEPROM.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <ArduinoJson.h>
 
 // WiFi Credentials
 char ssid[] = "Act";
 char pass[] = "Madhumakeskilled";
 
+// Buzzer Pin
+#define BUZZER_PIN 25  // Define buzzer pin (change as needed)
+#define BUZZER_DURATION 1000  // Buzzer duration in milliseconds
+#define BUZZER_FREQUENCY 2000 // Buzzer frequency in Hz
+
+// LCD I2C Setup
+LiquidCrystal_I2C lcd(0x27, 16, 2); // Set the LCD address to 0x27 for a 16 chars and 2 line display
+
 // ThingSpeak API
 WiFiClient client;
 unsigned long channelid = 2853641;  
 char thingSpeakWriteAPIKey[] = "3O9LY8ND0MM0VF9D";  
+
+// // Server API
+// const char* serverName = "http://yourserver.com/api/data";
 
 // Sensor Pin
 #define CURRENT_SENSOR_PIN  35   // ACS712 Sensor (A0)
@@ -77,7 +91,7 @@ void printPowerConsumption() {
     Serial.println("\n=== Power Consumption Report ===");
     Serial.println("--------------------------------");
     Serial.print("Current:     "); 
-    Serial.print(currentValue, 2);
+    Serial.print(abs(currentValue), 2);  // Use abs() to show positive value
     Serial.println(" A");
     
     Serial.print("Voltage:     ");
@@ -85,34 +99,34 @@ void printPowerConsumption() {
     Serial.println(" V");
     
     Serial.print("Power:       ");
-    Serial.print(powerValue, 2);
+    Serial.print(abs(powerValue), 2);  // Use abs() to show positive value
     Serial.println(" W");
     
     Serial.print("Energy:      ");
-    Serial.print(kWh, 3);
+    Serial.print(abs(kWh), 3);  // Use abs() to show positive value
     Serial.println(" kWh");
     
     Serial.print("Avg Power:   ");
-    Serial.print(powerMovingAverage, 2);
+    Serial.print(abs(powerMovingAverage), 2);  // Use abs() to show positive value
     Serial.println(" W");
     Serial.println("--------------------------------\n");
 }
 
 // Measure Current & Calculate Power
 void measurePower() {
-    float totalCurrent = 0;
-    int numSamples = 100;  // Noise reduction
+  float totalCurrent = 0;
+  int numSamples = 100;  // Noise reduction
 
-    for (int i = 0; i < numSamples; i++) {
-        float currentSensorValue = analogRead(CURRENT_SENSOR_PIN);
-        float currentVoltage = (currentSensorValue / 4095.0) * 3.3;
-        totalCurrent += (currentVoltage - ACS_OFFSET) / ACS_SENSITIVITY;
+  for (int i = 0; i < numSamples; i++) {
+    float currentSensorValue = analogRead(CURRENT_SENSOR_PIN);
+    float currentVoltage = (currentSensorValue / 4095.0) * 3.3;
+    totalCurrent += (currentVoltage - ACS_OFFSET) / ACS_SENSITIVITY;
         delayMicroseconds(100);
-    }
+  }
     currentValue = totalCurrent / numSamples;
 
-    // Calculate Power (P = V * I)
-    powerValue = ASSUMED_VOLTAGE * currentValue;
+  // Calculate Power (P = V * I)
+  powerValue = ASSUMED_VOLTAGE * currentValue;
     updateMovingAverage(powerValue);
     
     // Update kWh
@@ -165,6 +179,20 @@ bool detectSignificantChange() {
     return false;
 }
 
+// Function to trigger buzzer alert
+void triggerBuzzer() {
+    tone(BUZZER_PIN, BUZZER_FREQUENCY, BUZZER_DURATION);
+}
+
+// Function to display message on LCD
+void displayLCD(const char* line1, const char* line2) {
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print(line1);
+    lcd.setCursor(0, 1);
+    lcd.print(line2);
+}
+
 // Enhanced Theft Detection
 bool detectTheft() {
     unsigned long currentMillis = millis();
@@ -187,28 +215,22 @@ bool detectTheft() {
     if(detectSignificantChange()) {
         anomalyDetected = true;
         Serial.println("⚠️ Abnormal power change pattern detected!");
+        displayLCD("Warning!", "Power Change");
     }
 
     // 2. Check absolute power threshold
-    if (powerMovingAverage > powerThreshold) {
+    if (abs(powerMovingAverage) > powerThreshold) {  // Use abs() to check positive threshold
         anomalyDetected = true;
         Serial.println("⚠️ High power consumption detected!");
-        Serial.print("Current Power: ");
-        Serial.print(powerMovingAverage);
-        Serial.print("W, Threshold: ");
-        Serial.print(powerThreshold);
-        Serial.println("W");
+        String powerStr = String(abs(powerMovingAverage), 1) + "W";  // Use abs() for display
+        displayLCD("High Power Use", powerStr.c_str());
     }
 
     // 3. Check pattern deviation
-    if (powerMovingAverage > patternThresholds[currentHour]) {
+    if (abs(powerMovingAverage) > patternThresholds[currentHour]) {  // Use abs() for comparison
         anomalyDetected = true;
         Serial.println("⚠️ Unusual consumption pattern for this time!");
-        Serial.print("Expected max: ");
-        Serial.print(patternThresholds[currentHour]);
-        Serial.print("W, Current: ");
-        Serial.print(powerMovingAverage);
-        Serial.println("W");
+        displayLCD("Unusual Pattern", "Check Power");
     }
 
     // Update consecutive anomalies with more detailed logging
@@ -222,13 +244,12 @@ bool detectTheft() {
         if (consecutiveAnomalies >= MAX_ANOMALIES && !isTheftAlertActive) {
             isTheftAlertActive = true;
             Serial.println("🚨 POWER THEFT ALERT! Multiple anomalies confirmed!");
-            Serial.println("Details:");
-            Serial.print("- Average Power: ");
-            Serial.print(powerMovingAverage);
-            Serial.println("W");
-            Serial.print("- Current Reading: ");
-            Serial.print(powerValue);
-            Serial.println("W");
+            
+            // Display alert on LCD
+            displayLCD("THEFT DETECTED!", "Alert Sent");
+            
+            // Trigger buzzer
+            triggerBuzzer();
             
             // Send alert to ThingSpeak
             ThingSpeak.setField(4, 1); // Alert field
@@ -237,6 +258,8 @@ bool detectTheft() {
     } else {
         if(consecutiveAnomalies > 0) {
             Serial.println("✅ Normal power consumption resumed");
+            String powerStr = String(abs(powerValue), 1) + "W";  // Use abs() for display
+            displayLCD("Power Normal", powerStr.c_str());
         }
         consecutiveAnomalies = 0;
         if (isTheftAlertActive) {
@@ -253,13 +276,14 @@ void sendDataToThingSpeak() {
   ThingSpeak.setField(1, currentValue);
   ThingSpeak.setField(2, powerValue);
   ThingSpeak.setField(3, kWh);
+  ThingSpeak.setField(4, isTheftAlertActive ? 1 : 0); // Status: 1 for Theft Detected, 0 for Normal
   
   int responseCode = ThingSpeak.writeFields(channelid, thingSpeakWriteAPIKey);
   if (responseCode == 200) {
-    Serial.println("✅ Data sent to ThingSpeak!");
+      Serial.println("✅ Data sent to ThingSpeak!");
   } else {
-    Serial.print("❌ Error sending data: ");
-    Serial.println(responseCode);
+      Serial.print("❌ Error sending data: ");
+      Serial.println(responseCode);
   }
 }
 
@@ -279,29 +303,46 @@ void calibrateACS712() {
   Serial.println(ACS_OFFSET, 3);
 }
 
+// Function to send JSON data to server
+void sendJsonToServer() {
+    // Removed server API code
+}
+
 void setup() {
   Serial.begin(115200);
-  
-  // Initialize arrays
-  for (int i = 0; i < MOVING_AVERAGE_WINDOW; i++) {
-    powerReadings[i] = 0;
-  }
-  for (int i = 0; i < PATTERN_SAMPLES; i++) {
-    normalPatterns[i] = 0;
-    patternThresholds[i] = powerThreshold;
-  }
+    
+    // Initialize LCD
+    lcd.init();
+    lcd.backlight();
+    displayLCD("Power Monitor", "Starting...");
+    
+    // Initialize Buzzer
+    pinMode(BUZZER_PIN, OUTPUT);
+    
+    // Initialize arrays
+    for (int i = 0; i < MOVING_AVERAGE_WINDOW; i++) {
+        powerReadings[i] = 0;
+    }
+    for (int i = 0; i < PATTERN_SAMPLES; i++) {
+        normalPatterns[i] = 0;
+        patternThresholds[i] = powerThreshold;
+    }
   
   // Connect to Wi-Fi
+    displayLCD("Connecting to", ssid);
   WiFi.begin(ssid, pass);
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
     Serial.println("Connecting to WiFi...");
   }
   Serial.println("Connected to WiFi!");
+    displayLCD("WiFi Connected", "Starting...");
   ThingSpeak.begin(client);
 
   // Calibrate ACS712
+    displayLCD("Calibrating", "Sensor...");
   calibrateACS712();
+    displayLCD("Ready!", "Monitoring...");
 }
 
 void loop() {
@@ -313,8 +354,7 @@ void loop() {
     if (currentMillis - lastTheftCheckTime >= THEFT_CHECK_INTERVAL) {
         if (detectTheft()) {
             Serial.println("🚨 THEFT DETECTED - Immediate Alert!");
-            // Send immediate alert to ThingSpeak
-            sendDataToThingSpeak();
+            // Alert already handled in detectTheft()
         }
         lastTheftCheckTime = currentMillis;
     }
@@ -329,7 +369,14 @@ void loop() {
     if (currentMillis - lastThingSpeakUpdate >= 15000) {
         sendDataToThingSpeak();
         lastThingSpeakUpdate = currentMillis;
+        
+        // Update LCD with current power
+        if (!isTheftAlertActive) {  // Don't overwrite theft alert
+            String powerStr = "Power: " + String(abs(powerValue), 1) + "W";  // Use abs() for display
+            String energyStr = "Energy: " + String(abs(kWh), 3) + "kWh";  // Use abs() for display
+            displayLCD(powerStr.c_str(), energyStr.c_str());
+        }
     }
     
-    delay(100); // Shorter delay for more responsive detection
+    delay(2000); // Shorter delay for more responsive detection
 }
