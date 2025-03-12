@@ -42,6 +42,10 @@ def loginPage():
 def signupPage():
     return render_template('signup.html')
 
+@app.route('/dashboard')
+def DashboardPage():
+    return render_template('dashboard.html')
+
 @app.route('/register',methods=['POST']) # page (1 Route), page (2 Route)
 def register():
     wallet=request.form['address']
@@ -71,10 +75,12 @@ def loginForm():
     try:
         result=contract.functions.userLogin(username,password).call()
         print(result)
+        return redirect(url_for('DashboardPage'))
         if result==True:
             response=contract.functions.viewUserByUsername(username).call()
-            print (response)
-            return render_template('login.html',message='success')
+            session['userwallet']=response[0]
+            session['username']=response[1]
+            session['useremail']=response[3]
         else:
             return render_template('login.html',message='Invalid credentials')
     except Exception as e:
