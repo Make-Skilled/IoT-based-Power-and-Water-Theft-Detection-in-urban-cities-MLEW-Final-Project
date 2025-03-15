@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - Theft Detection System</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <a href="{{ url_for('DashboardPage') }}" class="text-xl font-bold text-indigo-600">
+                            Theft Detection System
+                        </a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <a href="{{ url_for('DashboardPage') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+                        <i class="fas fa-tachometer-alt mr-1"></i> Dashboard
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+                        <i class="fas fa-sign-out-alt mr-1"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Notifications Container -->
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">Notifications</h1>
+            <button id="markAllRead" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors">
+                Mark All as Read
+            </button>
+        </div>
+
+        <div id="notificationsContainer" class="space-y-4">
+            <!-- Notifications will be loaded here -->
+            <div class="animate-pulse">
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                    <div class="space-y-3 mt-4">
+                        <div class="h-4 bg-gray-200 rounded"></div>
+                        <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function loadNotifications() {
+            fetch('/api/notifications')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('notificationsContainer');
+                    container.innerHTML = '';
+
+                    if (data.notifications.length === 0) {
+                        container.innerHTML = `
+                            <div class="bg-white p-6 rounded-lg shadow text-center">
+                                <p class="text-gray-500">No notifications found</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    data.notifications.forEach((notification, index) => {
+                        const notificationEl = document.createElement('div');
+                        notificationEl.className = `bg-white p-4 rounded-lg shadow ${notification.is_read ? 'opacity-75' : ''}`;
+                        
+                        const typeIcon = notification.type === 'POWER' ? 'fa-bolt' : 'fa-tint';
+                        const typeColor = notification.type === 'POWER' ? 'text-yellow-500' : 'text-blue-500';
+
+                        notificationEl.innerHTML = `
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0">
+                                    <i class="fas ${typeIcon} ${typeColor} text-2xl"></i>
+                                </div>
+                                <div class="ml-4 flex-1">
+                                    <p class="text-sm font-medium text-gray-900">
+                                        ${notification.message}
+                                    </p>
+                                    <p class="mt-1 text-sm text-gray-500">
+                                        ${notification.parameter}: ${notification.value}
+                                    </p>
+                                    <p class="mt-1 text-xs text-gray-400">
+                                        ${notification.timestamp}
+                                    </p>
+                                </div>
+                                ${!notification.is_read ? `
+                                    <button onclick="markAsRead(${index})" class="ml-4 text-sm text-indigo-600 hover:text-indigo-800">
+                                        Mark as read
+                                    </button>
+                                ` : ''}
+                            </div>
+                        `;
+                        
+                        container.appendChild(notificationEl);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading notifications:', error);
+                });
+        }
+
+        function markAsRead(index) {
+            fetch('/api/notifications/mark-read', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ index: index })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    loadNotifications();
+                }
+            })
+            .catch(error => {
+                console.error('Error marking notification as read:', error);
+            });
+        }
+
+        document.getElementById('markAllRead').addEventListener('click', () => {
+            fetch('/api/notifications/mark-read', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    loadNotifications();
+                }
+            })
+            .catch(error => {
+                console.error('Error marking all notifications as read:', error);
+            });
+        });
+
+        // Load notifications when page loads
+        loadNotifications();
+
+        // Refresh notifications every 30 seconds
+        setInterval(loadNotifications, 30000);
+    </script>
+</body>
+</html>

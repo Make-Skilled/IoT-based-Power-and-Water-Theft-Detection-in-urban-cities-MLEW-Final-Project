@@ -18,6 +18,13 @@
                     <span class="text-xl font-bold text-indigo-600">IoT Theft Detection</span>
                 </div>
                 <div class="flex items-center space-x-4">
+                    <!-- Add Notifications Button -->
+                    <a href="{{ url_for('notifications') }}" class="text-gray-700 hover:text-indigo-600 relative">
+                        <i class="fas fa-bell mr-1"></i>
+                        <span id="notificationCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                            0
+                        </span>
+                    </a>
                     <a href="/logout" class="text-gray-700 hover:text-indigo-600">
                         <i class="fas fa-sign-out-alt mr-1"></i> Logout
                     </a>
@@ -153,6 +160,23 @@
         setInterval(function() {
             location.reload();
         }, 300000);
+
+        // Add notification count update function
+        function updateNotificationCount() {
+            fetch('/api/notifications')
+                .then(response => response.json())
+                .then(data => {
+                    const unreadCount = data.notifications.filter(n => !n.is_read).length;
+                    const countElement = document.getElementById('notificationCount');
+                    countElement.textContent = unreadCount;
+                    countElement.style.display = unreadCount > 0 ? 'flex' : 'none';
+                })
+                .catch(error => console.error('Error fetching notification count:', error));
+        }
+
+        // Update notification count every minute
+        updateNotificationCount();
+        setInterval(updateNotificationCount, 60000);
     </script>
 </body>
 </html>

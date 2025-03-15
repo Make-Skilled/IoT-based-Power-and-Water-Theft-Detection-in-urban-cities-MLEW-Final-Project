@@ -280,7 +280,43 @@ def logout():
     session.clear()
     return redirect('/')
 
+@app.route('/notifications')
+def notifications():
+    if 'userwallet' not in session:
+        return redirect(url_for('loginPage'))
+    
+    try:
+        contract, web3 = connectWithContract(session['userwallet'])
+        if not contract or not web3:
+            return render_template('notifications.html', error='Blockchain connection failed')
+        print(session['userwallet'])
+        # Get notifications from the contract
+        types, messages, parameters, values, timestamps, is_read = contract.functions.getUserNotifications(
+            session['userwallet']
+        ).call()
 
+        # Create notifications list
+        notifications = []
+        for i in range(len(types)):
+            notifications.append({
+                'type': types[i],
+                'message': messages[i],
+                'parameter': parameters[i],
+                'value': values[i],
+                'timestamp': datetime.fromtimestamp(timestamps[i]).strftime('%Y-%m-%d %H:%M:%S'),
+                'is_read': is_read[i],
+                'index': i  # Add index for mark as read functionality
+            })
+
+        # Sort by timestamp (newest first) and get last 5
+        notifications.sort(key=lambda x: x['timestamp'], reverse=True)
+        notifications = notifications[:5]
+
+        return render_template('notifications.html', notifications=notifications)
+    
+    except Exception as e:
+        print(f"Error fetching notifications: {str(e)}")
+        return render_template('notifications.html', error='Failed to fetch notifications')
 
 if __name__=="__main__":
     app.run(host='0.0.0.0',port=4001,debug=True)
