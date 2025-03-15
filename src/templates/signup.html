@@ -4,188 +4,276 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign Up - IoT & Blockchain</title>
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
-    /* Custom Styling for a Sleek, Modern, and Attractive Design */
     body {
-      font-family: 'Arial', sans-serif;
+      font-family: 'Inter', sans-serif;
       margin: 0;
       padding: 0;
       height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: linear-gradient(45deg, #4CAF50, #00B5E2); /* Dynamic Gradient Background */
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       background-size: 400% 400%;
-      animation: gradientAnimation 15s ease infinite; /* Animation for Background */
+      animation: gradientAnimation 15s ease infinite;
     }
 
-    /* Keyframe animation for background gradient */
     @keyframes gradientAnimation {
-      0% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     .signup-container {
-      background: rgba(255, 255, 255, 0.9); /* Transparent White Background */
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-      border-radius: 15px;
-      padding: 50px 40px; /* Increased padding for better spacing */
-      max-width: 480px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 450px;
       width: 100%;
-      text-align: center;
-      box-sizing: border-box; /* Ensures padding doesn't exceed width */
+      transform: translateY(0);
+      transition: all 0.3s ease;
     }
 
-    h2 {
-      font-size: 2.4rem;
-      color: #333;
-      font-weight: 700;
-      margin-bottom: 24px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+    .signup-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
     }
 
-    .form-group {
+    .input-group {
+      position: relative;
       margin-bottom: 20px;
     }
 
-    .form-group label {
-      text-align: left;
-      font-weight: 600;
-      font-size: 14px;
-      color: #333;
-    }
-
-    .form-group input {
+    .input-group input {
       width: 100%;
-      padding: 14px 16px;
-      margin-top: 8px;
-      border-radius: 8px;
-      border: 1px solid #ddd;
+      padding: 12px 16px;
+      padding-left: 40px;
+      border-radius: 10px;
+      border: 2px solid #e2e8f0;
       font-size: 14px;
-      outline: none;
       transition: all 0.3s;
+      background-color: #f8fafc;
     }
 
-    .form-group input:focus {
-      border-color: #4CAF50;
-      box-shadow: 0 0 10px rgba(76, 175, 80, 0.6);
+    .input-group i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+    }
+
+    .input-group input:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      outline: none;
     }
 
     .signup-btn {
-      background: #00B5E2;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
       padding: 14px;
       width: 100%;
-      border-radius: 8px;
+      border-radius: 10px;
       font-weight: 600;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
       cursor: pointer;
       border: none;
       transition: all 0.3s ease;
     }
 
     .signup-btn:hover {
-      background-color: #008C9E;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
     }
 
-    .signup-btn:focus {
-      outline: none;
-      box-shadow: 0 0 8px rgba(0, 181, 226, 0.7);
-    }
-
-    .signin-text {
-      margin-top: 16px;
+    .error-message {
+      background-color: #fee2e2;
+      border: 1px solid #fecaca;
+      color: #ef4444;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 16px;
       font-size: 14px;
-      color: #333;
+      display: flex;
+      align-items: center;
     }
 
-    .signin-link {
-      color: #4CAF50;
-      font-weight: 600;
-      text-decoration: none;
+    .error-message i {
+      margin-right: 8px;
     }
 
-    .signin-link:hover {
-      color: #00B5E2;
+    .brand-logo {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    /* For mobile devices */
-    @media (max-width: 480px) {
-      .signup-container {
-        padding: 30px 20px;
-      }
-      h2 {
-        font-size: 1.8rem;
-      }
-      .form-group input {
-        padding: 12px 16px;
-      }
-      .signup-btn {
-        padding: 12px;
-      }
+    .brand-logo i {
+      font-size: 32px;
+      color: white;
     }
   </style>
 </head>
 <body>
-
   <div class="signup-container">
-    <h2>Create Your Account</h2>
-    <form action="/register" method="post">
-      
-      <!-- Address Input -->
-      <div class="form-group">
-        <label for="address">Address</label>
-        <input type="text" id="address" name="address" placeholder="Enter address" required />
+    <!-- Brand Logo -->
+    <div class="brand-logo">
+      <i class="fas fa-shield-alt"></i>
+    </div>
+
+    <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Create Account</h1>
+    
+    <form action="/register" method="post" id="signupForm">
+      {% if message %}
+      <div class="error-message">
+        <i class="fas fa-exclamation-circle"></i>
+        {{ message }}
+      </div>
+      {% endif %}
+
+      <!-- Wallet Address Input -->
+      <div class="input-group">
+        <i class="fas fa-wallet"></i>
+        <input 
+          type="text" 
+          id="address" 
+          name="address" 
+          placeholder="Wallet Address"
+          required 
+        />
       </div>
 
       <!-- Username Input -->
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" placeholder="Enter username" required />
+      <div class="input-group">
+        <i class="fas fa-user"></i>
+        <input 
+          type="text" 
+          id="username" 
+          name="username" 
+          placeholder="Username"
+          required 
+        />
       </div>
 
       <!-- Email Input -->
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" placeholder="Enter email" required />
+      <div class="input-group">
+        <i class="fas fa-envelope"></i>
+        <input 
+          type="email" 
+          id="email" 
+          name="email" 
+          placeholder="Email Address"
+          required 
+        />
       </div>
 
       <!-- Password Input -->
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" placeholder="Enter password" required />
+      <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          placeholder="Password"
+          required 
+        />
       </div>
 
       <!-- Confirm Password Input -->
-      <div class="form-group mb-6">
-        <label for="confirmPassword">Confirm Password</label>
-        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" required />
+      <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <input 
+          type="password" 
+          id="confirmPassword" 
+          name="confirmPassword" 
+          placeholder="Confirm Password"
+          required 
+        />
       </div>
 
-      <!-- Submit Button -->
-      <button type="submit" class="signup-btn">Sign Up</button>
+      <!-- Terms and Conditions -->
+      <div class="flex items-center mb-6">
+        <input type="checkbox" id="terms" class="form-checkbox h-4 w-4 text-indigo-600" required>
+        <label for="terms" class="ml-2 text-sm text-gray-600">
+          I agree to the <a href="#" class="text-indigo-600 hover:text-indigo-800">Terms and Conditions</a>
+        </label>
+      </div>
+
+      <!-- Sign Up Button -->
+      <button type="submit" class="signup-btn">
+        Create Account
+      </button>
     </form>
 
-    <!-- Message -->
-    <div class="text-center mt-4">
-      <span class="text-red-500">{{ message }}</span>
-    </div>
-
-    <!-- Toggle Login Link -->
-    <div class="signin-text text-center">
-      <p>Already have an account? <a href="login" class="signin-link">Log In</a></p>
+    <!-- Login Prompt -->
+    <div class="mt-6 text-center">
+      <p class="text-gray-600">
+        Already have an account? 
+        <a href="/login" class="text-indigo-600 font-semibold hover:text-indigo-800">
+          Sign in here
+        </a>
+      </p>
     </div>
   </div>
 
+  <script>
+    // Add loading state to form submission
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+      // Password validation
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      
+      if (password !== confirmPassword) {
+        e.preventDefault();
+        alert('Passwords do not match!');
+        return;
+      }
+
+      const button = this.querySelector('button[type="submit"]');
+      button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+      button.disabled = true;
+    });
+
+    // Password visibility toggle
+    document.addEventListener('DOMContentLoaded', function() {
+      const passwordInputs = ['password', 'confirmPassword'];
+      
+      passwordInputs.forEach(inputId => {
+        const input = document.getElementById(inputId);
+        const togglePassword = document.createElement('i');
+        togglePassword.className = 'fas fa-eye absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-400 hover:text-gray-600';
+        togglePassword.style.right = '12px';
+        input.parentElement.style.position = 'relative';
+        input.parentElement.appendChild(togglePassword);
+
+        togglePassword.addEventListener('click', function() {
+          const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+          input.setAttribute('type', type);
+          this.className = `fas fa-eye${type === 'password' ? '' : '-slash'} absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-400 hover:text-gray-600`;
+        });
+      });
+    });
+
+    // Simple email validation
+    document.getElementById('email').addEventListener('blur', function() {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(this.value)) {
+        this.style.borderColor = '#ef4444';
+      } else {
+        this.style.borderColor = '#e2e8f0';
+      }
+    });
+  </script>
 </body>
 </html>

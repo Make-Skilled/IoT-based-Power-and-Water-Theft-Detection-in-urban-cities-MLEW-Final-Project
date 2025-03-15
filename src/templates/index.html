@@ -6,135 +6,255 @@
   <title>IoT-Based Power and Water Theft Detection for Urban Cities</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Add Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-gray-900 text-white font-sans">
+<body class="bg-slate-50">
 
   <!-- Navbar Section -->
-  <nav class="bg-gradient-to-r from-teal-800 to-teal-600 text-white py-6 px-8 shadow-md fixed w-full z-50">
-    <div class="max-w-7xl mx-auto flex items-center justify-between">
-      <!-- Logo or Project Title -->
-      <a href="/" class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500">IoT Theft Detection</a>
-
-      <!-- Nav Links -->
-      <div class="space-x-6 hidden md:flex">
-        <a href="/" class="hover:text-teal-300 transition">Home</a>
-        <a href="#about" class="hover:text-teal-300 transition">About</a>
-        <a href="#features" class="hover:text-teal-300 transition">Features</a>
-        <a href="#get-started" class="hover:text-teal-300 transition">Get Started</a>
-        <a href="/login" class="hover:text-teal-300 transition">Login</a>
-        <a href="/logout" class="hover:text-teal-300 transition">Logout</a>
+  <nav class="bg-white shadow-lg fixed w-full z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex items-center">
+          <a href="/" class="flex items-center">
+            <i class="fas fa-shield-alt text-indigo-600 text-2xl mr-2"></i>
+            <span class="text-2xl font-bold text-indigo-600">IoT Theft Detection</span>
+          </a>
+        </div>
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="/" class="text-gray-700 hover:text-indigo-600">Home</a>
+          <a href="#about" class="text-gray-700 hover:text-indigo-600">About</a>
+          <a href="#features" class="text-gray-700 hover:text-indigo-600">Features</a>
+          <a href="#how-it-works" class="text-gray-700 hover:text-indigo-600">How It Works</a>
+          <a href="#contact" class="text-gray-700 hover:text-indigo-600">Contact</a>
+          <a href="/login" class="text-gray-700 hover:text-indigo-600">Login</a>
+          <a href="/signup" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">Sign Up</a>
+        </div>
       </div>
-
-      <!-- Mobile Menu (Hamburger) -->
-      <div class="md:hidden">
-        <button class="text-white" id="mobile-menu-button">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 12h18M3 6h18M3 18h18"></path>
-          </svg>
-        </button>
-      </div>
-    </div>
-
-    <!-- Mobile Menu Dropdown -->
-    <div class="md:hidden hidden" id="mobile-menu">
-      <a href="/" class="block py-2 px-4 text-white hover:bg-teal-700">Home</a>
-      <a href="#about" class="block py-2 px-4 text-white hover:bg-teal-700">About</a>
-      <a href="#features" class="block py-2 px-4 text-white hover:bg-teal-700">Features</a>
-      <a href="#get-started" class="block py-2 px-4 text-white hover:bg-teal-700">Get Started</a>
-      <a href="/login" class="block py-2 px-4 text-white hover:bg-teal-700">Login</a>
-      <a href="/logout" class="block py-2 px-4 text-white hover:bg-teal-700">Logout</a>
     </div>
   </nav>
 
   <!-- Hero Section -->
-  <header class="bg-gradient-to-r from-teal-700 to-teal-800 text-center py-36 px-8">
-    <h1 class="text-6xl font-extrabold leading-tight mb-6 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-pink-600">IoT Power & Water Theft Detection</h1>
-    <p class="text-2xl text-gray-200 mb-6">Smart Resource Management for Safer, Sustainable Cities</p>
-    <a href="#get-started" class="bg-gradient-to-r from-green-400 to-blue-500 text-white py-4 px-10 rounded-lg text-xl hover:bg-gradient-to-r hover:from-green-500 hover:to-blue-600 transition duration-300">Get Started</a>
-  </header>
-
-  <!-- About Section -->
-  <section id="about" class="py-28 px-8 bg-gray-800 text-center">
-    <div class="max-w-3xl mx-auto">
-      <h2 class="text-4xl font-bold text-teal-400 mb-6">About the Project</h2>
-      <p class="text-lg text-gray-300 leading-relaxed">
-        The IoT-based Power and Water Theft Detection system provides a powerful solution to monitor urban infrastructure. By using smart sensors, real-time data is gathered to detect power and water theft, misuse, and leakage. The system securely stores data using blockchain, ensuring accurate, transparent, and tamper-proof records. This project aims to enhance city-wide resource management and prevent losses caused by unauthorized usage.
-      </p>
+  <div class="pt-32 pb-20 bg-gradient-to-r from-indigo-500 to-purple-600">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-5xl font-bold text-white mb-6">Smart Resource Protection System</h1>
+      <p class="text-xl text-white/90 mb-8">Detect and prevent power & water theft using IoT and blockchain technology</p>
+      <div class="flex justify-center space-x-4">
+        <a href="/signup" class="bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100">
+          Get Started
+        </a>
+        <a href="#how-it-works" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white/10">
+          Learn More
+        </a>
+      </div>
     </div>
-  </section>
+  </div>
 
-  <!-- Features Section -->
-  <section id="features" class="py-28 bg-gray-900">
-    <div class="max-w-7xl mx-auto text-center">
-      <h2 class="text-4xl font-bold text-teal-400 mb-12">Key Features</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-16">
-        
-        <!-- Feature 1 -->
-        <div class="p-8 bg-teal-900 rounded-lg shadow-xl transform hover:scale-105 transition duration-300">
-          <h3 class="text-xl font-semibold text-yellow-400 mb-4">Real-Time Theft Detection</h3>
-          <p class="text-gray-300">Instantly detect power and water theft with advanced IoT sensors and minimize resource wastage.</p>
+  <!-- Stats Section -->
+  <div class="py-12 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+        <div class="p-6">
+          <p class="text-4xl font-bold text-indigo-600">98%</p>
+          <p class="mt-2 text-lg text-gray-600">Detection Accuracy</p>
         </div>
-
-        <!-- Feature 2 -->
-        <div class="p-8 bg-teal-900 rounded-lg shadow-xl transform hover:scale-105 transition duration-300">
-          <h3 class="text-xl font-semibold text-yellow-400 mb-4">Leak and Theft Alerts</h3>
-          <p class="text-gray-300">Receive real-time notifications whenever an anomaly, such as theft or leakage, is detected.</p>
+        <div class="p-6">
+          <p class="text-4xl font-bold text-indigo-600">24/7</p>
+          <p class="mt-2 text-lg text-gray-600">Real-time Monitoring</p>
         </div>
-
-        <!-- Feature 3 -->
-        <div class="p-8 bg-teal-900 rounded-lg shadow-xl transform hover:scale-105 transition duration-300">
-          <h3 class="text-xl font-semibold text-yellow-400 mb-4">Blockchain Security</h3>
-          <p class="text-gray-300">Secure data storage on blockchain ensures transparency and tamper-proof records for city utilities.</p>
-        </div>
-
-        <!-- Feature 4 -->
-        <div class="p-8 bg-teal-900 rounded-lg shadow-xl transform hover:scale-105 transition duration-300">
-          <h3 class="text-xl font-semibold text-yellow-400 mb-4">Automated Reports</h3>
-          <p class="text-gray-300">Generate automated, detailed reports on resource usage, theft incidents, and maintenance schedules.</p>
-        </div>
-
-        <!-- Feature 5 -->
-        <div class="p-8 bg-teal-900 rounded-lg shadow-xl transform hover:scale-105 transition duration-300">
-          <h3 class="text-xl font-semibold text-yellow-400 mb-4">Efficient Resource Management</h3>
-          <p class="text-gray-300">Optimize resource distribution, reduce waste, and make informed decisions for better urban planning.</p>
-        </div>
-
-        <!-- Feature 6 -->
-        <div class="p-8 bg-teal-900 rounded-lg shadow-xl transform hover:scale-105 transition duration-300">
-          <h3 class="text-xl font-semibold text-yellow-400 mb-4">Seamless Integration</h3>
-          <p class="text-gray-300">Integrate smoothly with existing infrastructure for minimal disruption and enhanced utility management.</p>
+        <div class="p-6">
+          <p class="text-4xl font-bold text-indigo-600">100%</p>
+          <p class="mt-2 text-lg text-gray-600">Data Security</p>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- Call to Action Section -->
-  <section id="get-started" class="bg-gradient-to-r from-green-400 to-teal-600 py-20 text-center text-white">
-    <h2 class="text-4xl font-bold mb-6">Join the Fight Against Theft and Waste!</h2>
-    <p class="text-xl mb-8">Help create smarter, more efficient cities with IoT-based theft detection. Protect valuable resources and ensure sustainable management.</p>
-    <a href="/signup" class="bg-teal-700 text-white py-4 px-10 rounded-lg text-xl hover:bg-teal-800 transition duration-300">Sign Up Now</a>
-  </section>
+  <!-- Features Section -->
+  <div id="features" class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">Key Features</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <div class="text-indigo-600 mb-4">
+            <i class="fas fa-bolt text-3xl"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Power Theft Detection</h3>
+          <p class="text-gray-600">Advanced sensors to detect unauthorized power consumption and tampering.</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <div class="text-indigo-600 mb-4">
+            <i class="fas fa-tint text-3xl"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Water Theft Detection</h3>
+          <p class="text-gray-600">Smart flow meters to identify irregular water usage patterns and leakages.</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <div class="text-indigo-600 mb-4">
+            <i class="fas fa-shield-alt text-3xl"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Blockchain Security</h3>
+          <p class="text-gray-600">Immutable record-keeping using blockchain technology for data integrity.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- How It Works Section -->
+  <div id="how-it-works" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">How It Works</h2>
+      <div class="grid md:grid-cols-4 gap-8">
+        <div class="text-center">
+          <div class="bg-indigo-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
+            <i class="fas fa-sensor text-indigo-600 text-2xl"></i>
+          </div>
+          <h3 class="font-semibold mb-2">IoT Sensors</h3>
+          <p class="text-gray-600">Deploy smart sensors</p>
+        </div>
+        <div class="text-center">
+          <div class="bg-indigo-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
+            <i class="fas fa-chart-line text-indigo-600 text-2xl"></i>
+          </div>
+          <h3 class="font-semibold mb-2">Data Collection</h3>
+          <p class="text-gray-600">Monitor usage patterns</p>
+        </div>
+        <div class="text-center">
+          <div class="bg-indigo-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
+            <i class="fas fa-brain text-indigo-600 text-2xl"></i>
+          </div>
+          <h3 class="font-semibold mb-2">Analysis</h3>
+          <p class="text-gray-600">Detect anomalies</p>
+        </div>
+        <div class="text-center">
+          <div class="bg-indigo-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
+            <i class="fas fa-bell text-indigo-600 text-2xl"></i>
+          </div>
+          <h3 class="font-semibold mb-2">Alert System</h3>
+          <p class="text-gray-600">Instant notifications</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- About Section -->
+  <div id="about" class="py-20 bg-gray-50">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl font-bold text-gray-900 mb-8">About the Project</h2>
+      <p class="text-gray-600 leading-relaxed mb-8">
+        Our IoT-based system provides comprehensive monitoring and detection of resource theft in urban areas. 
+        Using advanced sensors and blockchain technology, we ensure transparent and secure tracking of power 
+        and water consumption. This innovative solution helps utilities and municipalities reduce losses and 
+        ensure fair distribution of resources.
+      </p>
+      <div class="grid md:grid-cols-3 gap-6 mt-12">
+        <div class="bg-white p-4 rounded-lg shadow">
+          <h4 class="font-semibold">Smart Detection</h4>
+          <p class="text-sm text-gray-600">AI-powered anomaly detection</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow">
+          <h4 class="font-semibold">Secure Data</h4>
+          <p class="text-sm text-gray-600">Blockchain-based storage</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow">
+          <h4 class="font-semibold">Real-time Alerts</h4>
+          <p class="text-sm text-gray-600">Instant notification system</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Section -->
+  <div id="contact" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">Contact Us</h2>
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="bg-gray-50 p-8 rounded-lg">
+          <h3 class="text-xl font-semibold mb-4">Get in Touch</h3>
+          <form class="space-y-4">
+            <div>
+              <input type="text" placeholder="Name" class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <div>
+              <input type="email" placeholder="Email" class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <div>
+              <textarea placeholder="Message" rows="4" class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-500"></textarea>
+            </div>
+            <button type="submit" class="w-full bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700">
+              Send Message
+            </button>
+          </form>
+        </div>
+        <div class="bg-gray-50 p-8 rounded-lg">
+          <h3 class="text-xl font-semibold mb-4">Contact Information</h3>
+          <div class="space-y-4">
+            <div class="flex items-center">
+              <i class="fas fa-map-marker-alt text-indigo-600 w-6"></i>
+              <span class="ml-3">123 Innovation Street, Tech City</span>
+            </div>
+            <div class="flex items-center">
+              <i class="fas fa-phone text-indigo-600 w-6"></i>
+              <span class="ml-3">+1 234 567 890</span>
+            </div>
+            <div class="flex items-center">
+              <i class="fas fa-envelope text-indigo-600 w-6"></i>
+              <span class="ml-3">contact@iottheftdetection.com</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Footer Section -->
-  <footer class="bg-gray-800 text-white py-10">
-    <div class="max-w-7xl mx-auto text-center">
-      <p class="text-sm">&copy; 2025 IoT Theft Detection. All Rights Reserved.</p>
-      <div class="mt-6">
-        <a href="https://twitter.com" class="text-teal-400 hover:text-teal-500 mx-4">Twitter</a>
-        <a href="https://facebook.com" class="text-teal-400 hover:text-teal-500 mx-4">Facebook</a>
-        <a href="https://linkedin.com" class="text-teal-400 hover:text-teal-500 mx-4">LinkedIn</a>
+  <footer class="bg-gray-900 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-lg font-semibold mb-4">IoT Theft Detection</h3>
+          <p class="text-gray-400">Securing resources through smart technology</p>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+          <ul class="space-y-2">
+            <li><a href="#about" class="text-gray-400 hover:text-white">About</a></li>
+            <li><a href="#features" class="text-gray-400 hover:text-white">Features</a></li>
+            <li><a href="#contact" class="text-gray-400 hover:text-white">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Legal</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white">Terms of Service</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Follow Us</h3>
+          <div class="flex space-x-4">
+            <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-linkedin"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+        <p class="text-gray-400">&copy; 2024 IoT Theft Detection. All rights reserved.</p>
       </div>
     </div>
   </footer>
 
+  <!-- Mobile Menu Button Script -->
   <script>
-    // Mobile menu toggle
-    const menuButton = document.getElementById("mobile-menu-button");
-    const mobileMenu = document.getElementById("mobile-menu");
+    const mobileMenuButton = document.querySelector('[data-mobile-menu-button]');
+    const mobileMenu = document.querySelector('[data-mobile-menu]');
 
-    menuButton.addEventListener("click", () => {
-      mobileMenu.classList.toggle("hidden");
-    });
+    if (mobileMenuButton && mobileMenu) {
+      mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+    }
   </script>
 
 </body>

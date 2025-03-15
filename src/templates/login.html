@@ -4,151 +4,244 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - IoT & Blockchain</title>
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Add Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
-    /* Custom Styling for a Sleek, Modern, and Attractive Design */
     body {
-      font-family: 'Arial', sans-serif;
+      font-family: 'Inter', sans-serif;
       margin: 0;
       padding: 0;
       height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: linear-gradient(45deg, #2c3e50, #4ca1af); /* Dark Gradient Background */
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       background-size: 400% 400%;
-      animation: gradientAnimation 15s ease infinite; /* Animation for Background */
+      animation: gradientAnimation 15s ease infinite;
     }
 
-    /* Keyframe animation for background gradient */
     @keyframes gradientAnimation {
-      0% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     .login-container {
-      background: rgba(255, 255, 255, 0.8); /* Slightly Transparent White */
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border-radius: 20px;
       padding: 40px;
       max-width: 400px;
       width: 100%;
-      text-align: center;
+      transform: translateY(0);
+      transition: all 0.3s ease;
     }
 
-    h1 {
-      font-size: 2rem;
-      color: #333;
-      font-weight: 600;
-      margin-bottom: 24px;
+    .login-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
     }
 
     .input-group {
-      margin-bottom: 20px;
-    }
-
-    .input-group label {
-      text-align: left;
-      font-weight: 600;
-      font-size: 14px;
-      color: #333;
+      position: relative;
+      margin-bottom: 24px;
     }
 
     .input-group input {
       width: 100%;
       padding: 12px 16px;
-      margin-top: 8px;
-      border-radius: 8px;
-      border: 1px solid #ddd;
+      padding-left: 40px;
+      border-radius: 10px;
+      border: 2px solid #e2e8f0;
       font-size: 14px;
-      outline: none;
       transition: all 0.3s;
+      background-color: #f8fafc;
+    }
+
+    .input-group i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
     }
 
     .input-group input:focus {
-      border-color: #4CAF50;
-      box-shadow: 0 0 10px rgba(76, 175, 80, 0.6);
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      outline: none;
     }
 
     .login-btn {
-      background: #4CAF50;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
       padding: 14px;
       width: 100%;
-      border-radius: 8px;
+      border-radius: 10px;
       font-weight: 600;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
       cursor: pointer;
       border: none;
       transition: all 0.3s ease;
     }
 
     .login-btn:hover {
-      background-color: #45a049;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
     }
 
-    .login-btn:focus {
-      outline: none;
-      box-shadow: 0 0 8px rgba(76, 175, 80, 0.7);
-    }
-
-    .signup-text {
-      margin-top: 16px;
+    .error-message {
+      background-color: #fee2e2;
+      border: 1px solid #fecaca;
+      color: #ef4444;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 16px;
       font-size: 14px;
-      color: #333;
+      display: flex;
+      align-items: center;
     }
 
-    .signup-link {
-      color: #00B5E2;
-      font-weight: 600;
-      text-decoration: none;
+    .error-message i {
+      margin-right: 8px;
     }
 
-    .signup-link:hover {
-      color: #4CAF50;
+    .brand-logo {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-logo i {
+      font-size: 32px;
+      color: white;
     }
   </style>
 </head>
 <body>
-
   <div class="login-container">
-    <h1>Login to IoT & Blockchain</h1>
+    <!-- Brand Logo -->
+    <div class="brand-logo">
+      <i class="fas fa-shield-alt"></i>
+    </div>
+
+    <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Welcome Back</h1>
+    
     <form action="/loginForm" method="post">
-      
+      {% if message %}
+      <div class="error-message">
+        <i class="fas fa-exclamation-circle"></i>
+        {{ message }}
+      </div>
+      {% endif %}
+
       <!-- Username Input -->
       <div class="input-group">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" placeholder="Enter your username" required />
+        <i class="fas fa-user"></i>
+        <input 
+          type="text" 
+          id="username" 
+          name="username" 
+          placeholder="Username"
+          required 
+          autocomplete="username"
+        />
       </div>
 
       <!-- Password Input -->
       <div class="input-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" placeholder="Enter your password" required />
+        <i class="fas fa-lock"></i>
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          placeholder="Password"
+          required 
+          autocomplete="current-password"
+        />
+      </div>
+
+      <!-- Remember Me & Forgot Password -->
+      <div class="flex items-center justify-between mb-6">
+        <label class="flex items-center">
+          <input type="checkbox" class="form-checkbox h-4 w-4 text-indigo-600">
+          <span class="ml-2 text-sm text-gray-600">Remember me</span>
+        </label>
+        <a href="#" class="text-sm text-indigo-600 hover:text-indigo-800">Forgot password?</a>
       </div>
 
       <!-- Login Button -->
-      <button type="submit" class="login-btn">Login</button>
+      <button type="submit" class="login-btn">
+        Sign In
+      </button>
     </form>
 
-    <!-- Message -->
-    <div class="text-center mt-4">
-      <span class="text-red-500">{{ message }}</span>
+    <!-- Signup Prompt -->
+    <div class="mt-6 text-center">
+      <p class="text-gray-600">
+        Don't have an account? 
+        <a href="signup" class="text-indigo-600 font-semibold hover:text-indigo-800">
+          Sign up here
+        </a>
+      </p>
     </div>
 
-    <!-- Signup Prompt -->
-    <div class="signup-text text-center">
-      <p>Don't have an account? <a href="signup" class="signup-link">Sign up here</a>.</p>
+    <!-- Social Login -->
+    <div class="mt-6">
+      <div class="relative">
+        <div class="absolute inset-0 flex items-center">
+          <div class="w-full border-t border-gray-300"></div>
+        </div>
+        <div class="relative flex justify-center text-sm">
+          <span class="px-2 bg-white text-gray-500">Or continue with</span>
+        </div>
+      </div>
+
+      <div class="mt-6 grid grid-cols-3 gap-3">
+        <button class="flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+          <i class="fab fa-google"></i>
+        </button>
+        <button class="flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+          <i class="fab fa-github"></i>
+        </button>
+        <button class="flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+          <i class="fab fa-linkedin"></i>
+        </button>
+      </div>
     </div>
   </div>
 
+  <script>
+    // Add loading state to form submission
+    document.querySelector('form').addEventListener('submit', function(e) {
+      const button = this.querySelector('button[type="submit"]');
+      button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+      button.disabled = true;
+    });
+
+    // Password visibility toggle
+    document.addEventListener('DOMContentLoaded', function() {
+      const passwordInput = document.getElementById('password');
+      const togglePassword = document.createElement('i');
+      togglePassword.className = 'fas fa-eye absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-400 hover:text-gray-600';
+      togglePassword.style.right = '12px';
+      passwordInput.parentElement.style.position = 'relative';
+      passwordInput.parentElement.appendChild(togglePassword);
+
+      togglePassword.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.className = `fas fa-eye${type === 'password' ? '' : '-slash'} absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-400 hover:text-gray-600`;
+      });
+    });
+  </script>
 </body>
 </html>

@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Theft Detection Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-shield-alt text-indigo-600 text-2xl mr-2"></i>
+                    <span class="text-xl font-bold text-indigo-600">IoT Theft Detection</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/logout" class="text-gray-700 hover:text-indigo-600">
+                        <i class="fas fa-sign-out-alt mr-1"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Power Monitoring Dashboard -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8">Power Monitoring Dashboard</h1>
+
+        <!-- Power ThingSpeak Charts Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Current Value Chart -->
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Current Consumption</h2>
+                <iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2853641/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15"></iframe>
+            </div>
+
+            <!-- Power Value Chart -->
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Power Consumption</h2>
+                <iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2853641/charts/2?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15"></iframe>
+            </div>
+
+            <!-- Energy (kWh) Chart -->
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Energy Consumption</h2>
+                <iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2853641/charts/4?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15"></iframe>
+            </div>
+
+            <!-- Theft Status Chart -->
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Theft Detection Status</h2>
+                <iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2853641/charts/3?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15"></iframe>
+            </div>
+        </div>
+
+        <!-- Power Status Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+            <div class="bg-white p-6 rounded-lg shadow">
+                <div class="flex items-center">
+                    <i class="fas fa-bolt text-yellow-500 text-3xl mr-4"></i>
+                    <div>
+                        <h3 class="text-lg font-semibold">Power Status</h3>
+                        <p class="text-green-500">Normal</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <div class="flex items-center">
+                    <i class="fas fa-chart-line text-blue-500 text-3xl mr-4"></i>
+                    <div>
+                        <h3 class="text-lg font-semibold">Monitoring</h3>
+                        <p class="text-green-500">Active</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <div class="flex items-center">
+                    <i class="fas fa-shield-alt text-indigo-500 text-3xl mr-4"></i>
+                    <div>
+                        <h3 class="text-lg font-semibold">System Status</h3>
+                        <p class="text-green-500">Active</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Water Monitoring Dashboard -->
+        <h1 class="text-3xl font-bold text-gray-800 mb-8 mt-16">Water Monitoring Dashboard</h1>
+        
+        <!-- Water ThingSpeak Charts Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Main Flow Chart -->
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Main Flow Rate</h2>
+                <iframe width="450" height="260" style="border: 1px solid #cccccc;" 
+                    src="https://thingspeak.com/channels/2853641/charts/4?bgcolor=%23ffffff&color=%230000FF&dynamic=true&results=60&type=line&update=15"></iframe>
+            </div>
+
+            <!-- User Flow Chart -->
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">User Flow Rate</h2>
+                <iframe width="450" height="260" style="border: 1px solid #cccccc;" 
+                    src="https://thingspeak.com/channels/2853641/charts/5?bgcolor=%23ffffff&color=%2300FF00&dynamic=true&results=60&type=line&update=15"></iframe>
+            </div>
+
+            <!-- Theft Detection Status -->
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Theft Detection Status</h2>
+                <iframe width="450" height="260" style="border: 1px solid #cccccc;" 
+                    src="https://thingspeak.com/channels/2853641/charts/6?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15"></iframe>
+            </div>
+        </div>
+
+        <!-- Water Status Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+            <div class="bg-white p-6 rounded-lg shadow">
+                <div class="flex items-center">
+                    <i class="fas fa-tint text-blue-500 text-3xl mr-4"></i>
+                    <div>
+                        <h3 class="text-lg font-semibold">Water Flow</h3>
+                        <p class="text-green-500">Normal</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <div class="flex items-center">
+                    <i class="fas fa-chart-bar text-blue-500 text-3xl mr-4"></i>
+                    <div>
+                        <h3 class="text-lg font-semibold">Monitoring</h3>
+                        <p class="text-green-500">Active</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <div class="flex items-center">
+                    <i class="fas fa-shield-alt text-blue-500 text-3xl mr-4"></i>
+                    <div>
+                        <h3 class="text-lg font-semibold">Security</h3>
+                        <p class="text-green-500">Protected</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Refresh Script -->
+    <script>
+        // Refresh the page every 5 minutes to get updated data
+        setInterval(function() {
+            location.reload();
+        }, 300000);
+    </script>
+</body>
+</html>
