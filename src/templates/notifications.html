@@ -32,84 +32,74 @@
     </nav>
 
     <!-- Notifications Container -->
-    <div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="max-w-6xl mx-auto px-4 py-8">
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-bold text-gray-800">Notifications</h1>
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">Notifications</h1>
+                <p class="text-gray-600 mt-2">
+                    Total: {{ total_count }} | Unread: {{ unread_count }}
+                </p>
+            </div>
             <button id="markAllRead" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors">
                 Mark All as Read
             </button>
         </div>
 
-        <div id="notificationsContainer" class="space-y-4">
-            <!-- Notifications will be loaded here -->
-            <div class="animate-pulse">
-                <div class="bg-white p-4 rounded-lg shadow">
-                    <div class="h-4 bg-gray-200 rounded w-3/4"></div>
-                    <div class="space-y-3 mt-4">
-                        <div class="h-4 bg-gray-200 rounded"></div>
-                        <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+        {% if error %}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <span class="block sm:inline">{{ error }}</span>
+        </div>
+        {% endif %}
+
+        {% if not notifications %}
+        <div class="bg-white p-6 rounded-lg shadow text-center">
+            <p class="text-gray-500">No notifications found</p>
+        </div>
+        {% else %}
+            {% for date, daily_notifications in grouped_notifications.items() %}
+            <div class="mb-8">
+                <h2 class="text-lg font-semibold text-gray-700 mb-4">{{ date }}</h2>
+                <div class="space-y-4">
+                    {% for notification in daily_notifications %}
+                    <div class="bg-white p-4 rounded-lg shadow {% if notification.is_read %}opacity-75{% endif %}" 
+                         id="notification-{{ notification.index }}">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                {% if notification.type == 'POWER' %}
+                                <i class="fas fa-bolt text-yellow-500 text-2xl"></i>
+                                {% else %}
+                                <i class="fas fa-tint text-blue-500 text-2xl"></i>
+                                {% endif %}
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <div class="flex justify-between">
+                                    <p class="text-sm font-medium text-gray-900">
+                                        {{ notification.message }}
+                                    </p>
+                                    <span class="text-xs text-gray-500">
+                                        {{ notification.timestamp.split(' ')[1] }}
+                                    </span>
+                                </div>
+                                <p class="mt-1 text-sm text-gray-500">
+                                    {{ notification.parameter }}: {{ notification.value }}
+                                </p>
+                                {% if not notification.is_read %}
+                                <button onclick="markAsRead({{ notification.index }})" 
+                                        class="mt-2 text-sm text-indigo-600 hover:text-indigo-800">
+                                    Mark as read
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
+                    {% endfor %}
                 </div>
             </div>
-        </div>
+            {% endfor %}
+        {% endif %}
     </div>
 
     <script>
-        function loadNotifications() {
-            fetch('/api/notifications')
-                .then(response => response.json())
-                .then(data => {
-                    const container = document.getElementById('notificationsContainer');
-                    container.innerHTML = '';
-
-                    if (data.notifications.length === 0) {
-                        container.innerHTML = `
-                            <div class="bg-white p-6 rounded-lg shadow text-center">
-                                <p class="text-gray-500">No notifications found</p>
-                            </div>
-                        `;
-                        return;
-                    }
-
-                    data.notifications.forEach((notification, index) => {
-                        const notificationEl = document.createElement('div');
-                        notificationEl.className = `bg-white p-4 rounded-lg shadow ${notification.is_read ? 'opacity-75' : ''}`;
-                        
-                        const typeIcon = notification.type === 'POWER' ? 'fa-bolt' : 'fa-tint';
-                        const typeColor = notification.type === 'POWER' ? 'text-yellow-500' : 'text-blue-500';
-
-                        notificationEl.innerHTML = `
-                            <div class="flex items-start">
-                                <div class="flex-shrink-0">
-                                    <i class="fas ${typeIcon} ${typeColor} text-2xl"></i>
-                                </div>
-                                <div class="ml-4 flex-1">
-                                    <p class="text-sm font-medium text-gray-900">
-                                        ${notification.message}
-                                    </p>
-                                    <p class="mt-1 text-sm text-gray-500">
-                                        ${notification.parameter}: ${notification.value}
-                                    </p>
-                                    <p class="mt-1 text-xs text-gray-400">
-                                        ${notification.timestamp}
-                                    </p>
-                                </div>
-                                ${!notification.is_read ? `
-                                    <button onclick="markAsRead(${index})" class="ml-4 text-sm text-indigo-600 hover:text-indigo-800">
-                                        Mark as read
-                                    </button>
-                                ` : ''}
-                            </div>
-                        `;
-                        
-                        container.appendChild(notificationEl);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error loading notifications:', error);
-                });
-        }
-
         function markAsRead(index) {
             fetch('/api/notifications/mark-read', {
                 method: 'POST',
@@ -121,7 +111,8 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    loadNotifications();
+                    // Refresh the page to show updated status
+                    window.location.reload();
                 }
             })
             .catch(error => {
@@ -135,24 +126,19 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({})
+                body: JSON.stringify({})  // empty object for marking all as read
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    loadNotifications();
+                    // Refresh the page to show updated status
+                    window.location.reload();
                 }
             })
             .catch(error => {
                 console.error('Error marking all notifications as read:', error);
             });
         });
-
-        // Load notifications when page loads
-        loadNotifications();
-
-        // Refresh notifications every 30 seconds
-        setInterval(loadNotifications, 30000);
     </script>
 </body>
 </html>

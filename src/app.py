@@ -289,34 +289,85 @@ def notifications():
         contract, web3 = connectWithContract(session['userwallet'])
         if not contract or not web3:
             return render_template('notifications.html', error='Blockchain connection failed')
-        print(session['userwallet'])
-        # Get notifications from the contract
-        types, messages, parameters, values, timestamps, is_read = contract.functions.getUserNotifications(
-            session['userwallet']
-        ).call()
+
+        # Get all notifications from the contract using the new function
+        user_addresses, types, messages, parameters, values, timestamps, is_read = contract.functions.getAllNotifications().call()
 
         # Create notifications list
         notifications = []
         for i in range(len(types)):
-            notifications.append({
-                'type': types[i],
-                'message': messages[i],
-                'parameter': parameters[i],
-                'value': values[i],
-                'timestamp': datetime.fromtimestamp(timestamps[i]).strftime('%Y-%m-%d %H:%M:%S'),
-                'is_read': is_read[i],
-                'index': i  # Add index for mark as read functionality
-            })
+            # Only include notifications for the current user
+            if Web3.toChecksumAddress(user_addresses[i]) == Web3.toChecksumAddress(session['userwallet']):
+                notifications.append({
+                    'type': types[i],
+                    'message': messages[i],
+                    'parameter': parameters[i],
+                    'value': values[i],
+                    'timestamp': datetime.fromtimestamp(timestamps[i]).strftime('%Y-%m-%d %H:%M:%S'),
+                    'is_read': is_read[i],
+                    'index': i,
+                    'user_address': user_addresses[i]
+                })
 
-        # Sort by timestamp (newest first) and get last 5
+        # Sort by timestamp (newest first)
         notifications.sort(key=lambda x: x['timestamp'], reverse=True)
-        notifications = notifications[:5]
 
-        return render_template('notifications.html', notifications=notifications)
+        # Group notifications by date
+        grouped_notifications = {}
+        for notification in notifications:
+            date = notification['timestamp'].split(' ')[0]  # Get just the date part
+            if date not in grouped_notifications:
+                grouped_notifications[date] = []
+            grouped_notifications[date].append(notification)
+        
+
+        return render_template('notifications.html', 
+                             notifications=notifications,
+                             grouped_notifications=grouped_notifications,
+                             total_count=len(notifications),
+                             unread_count=sum(1 for n in notifications if not n['is_read']))
     
     except Exception as e:
         print(f"Error fetching notifications: {str(e)}")
         return render_template('notifications.html', error='Failed to fetch notifications')
+
+@app.route('/api/notifications')
+def get_notifications():
+    if 'userwallet' not in session:
+        return jsonify({'error': 'Not authenticated'}), 401
+    
+    try:
+        contract, web3 = connectWithContract(session['userwallet'])
+        if not contract or not web3:
+            return jsonify({'error': 'Blockchain connection failed'}), 500
+
+        # Get all notifications using the new function
+        user_addresses, types, messages, parameters, values, timestamps, is_read = contract.functions.getAllNotifications().call()
+
+        # Create notifications list
+        notifications = []
+        for i in range(len(types)):
+            # Only include notifications for the current user
+            if Web3.toChecksumAddress(user_addresses[i]) == Web3.toChecksumAddress(session['userwallet']):
+                notifications.append({
+                    'type': types[i],
+                    'message': messages[i],
+                    'parameter': parameters[i],
+                    'value': values[i],
+                    'timestamp': datetime.fromtimestamp(timestamps[i]).strftime('%Y-%m-%d %H:%M:%S'),
+                    'is_read': is_read[i],
+                    'index': i
+                })
+
+        # Sort by timestamp (newest first)
+        notifications.sort(key=lambda x: x['timestamp'], reverse=True)
+        notifications = notifications[:5]  # Get last 5 for the API endpoint
+
+        return jsonify({'notifications': notifications})
+    
+    except Exception as e:
+        print(f"Error fetching notifications: {str(e)}")
+        return jsonify({'error': 'Failed to fetch notifications'}), 500
 
 if __name__=="__main__":
     app.run(host='0.0.0.0',port=4001,debug=True)

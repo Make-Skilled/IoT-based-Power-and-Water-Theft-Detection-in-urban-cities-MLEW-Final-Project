@@ -33,11 +33,6 @@ contract userManagement {
         _;
     }
 
-    modifier userExists(address wallet) {
-        require(users[wallet]._exist, "User does not exist");
-        _;
-    }
-
     function userSignUp(
         address wallet,
         string memory username,
@@ -94,7 +89,7 @@ contract userManagement {
         string memory message,
         string memory parameter,
         string memory value
-    ) public userExists(userAddress) {
+    ) public {
         Notification memory newNotification = Notification({
             _userAddress: userAddress,
             _type: notificationType,
@@ -111,7 +106,6 @@ contract userManagement {
     function getUserNotifications(address userAddress) 
         public 
         view 
-        userExists(userAddress)
         returns (
             string[] memory types,
             string[] memory messages,
@@ -143,46 +137,52 @@ contract userManagement {
         return (types, messages, parameters, values, timestamps, isRead);
     }
 
-    function getUnreadNotificationCount(address userAddress) 
+    function getAllNotifications() 
         public 
         view 
-        userExists(userAddress)
-        returns (uint256) 
+        returns (
+            address[] memory userAddresses,
+            string[] memory types,
+            string[] memory messages,
+            string[] memory parameters,
+            string[] memory values,
+            uint256[] memory timestamps,
+            bool[] memory isRead
+        ) 
     {
-        Notification[] storage notifications = userNotifications[userAddress];
-        uint256 unreadCount = 0;
-        
-        for (uint256 i = 0; i < notifications.length; i++) {
-            if (!notifications[i]._isRead) {
-                unreadCount++;
+        // First, calculate total number of notifications
+        uint256 totalNotifications = 0;
+        for (uint256 i = 0; i < userAddresses.length; i++) {
+            totalNotifications += userNotifications[userAddresses[i]].length;
+        }
+
+        // Initialize arrays with total size
+        userAddresses = new address[](totalNotifications);
+        types = new string[](totalNotifications);
+        messages = new string[](totalNotifications);
+        parameters = new string[](totalNotifications);
+        values = new string[](totalNotifications);
+        timestamps = new uint256[](totalNotifications);
+        isRead = new bool[](totalNotifications);
+
+        // Fill arrays with notifications from all users
+        uint256 currentIndex = 0;
+        for (uint256 i = 0; i < userAddresses.length; i++) {
+            address currentUser = userAddresses[i];
+            Notification[] storage userNotifs = userNotifications[currentUser];
+            
+            for (uint256 j = 0; j < userNotifs.length; j++) {
+                userAddresses[currentIndex] = currentUser;
+                types[currentIndex] = userNotifs[j]._type;
+                messages[currentIndex] = userNotifs[j]._message;
+                parameters[currentIndex] = userNotifs[j]._parameter;
+                values[currentIndex] = userNotifs[j]._value;
+                timestamps[currentIndex] = userNotifs[j]._timestamp;
+                isRead[currentIndex] = userNotifs[j]._isRead;
+                currentIndex++;
             }
         }
-        
-        return unreadCount;
-    }
 
-    function markNotificationAsRead(address userAddress, uint256 notificationIndex) 
-        public 
-        userExists(userAddress) 
-    {
-        require(msg.sender == userAddress, "Only the user can mark their notifications as read");
-        require(notificationIndex < userNotifications[userAddress].length, "Invalid notification index");
-        require(!userNotifications[userAddress][notificationIndex]._isRead, "Notification already read");
-
-        userNotifications[userAddress][notificationIndex]._isRead = true;
-    }
-
-    function markAllNotificationsAsRead(address userAddress) 
-        public 
-        userExists(userAddress) 
-    {
-        require(msg.sender == userAddress, "Only the user can mark their notifications as read");
-        
-        Notification[] storage notifications = userNotifications[userAddress];
-        for (uint256 i = 0; i < notifications.length; i++) {
-            if (!notifications[i]._isRead) {
-                notifications[i]._isRead = true;
-            }
-        }
+        return (userAddresses, types, messages, parameters, values, timestamps, isRead);
     }
 }

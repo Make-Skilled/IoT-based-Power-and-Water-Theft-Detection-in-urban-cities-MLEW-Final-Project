@@ -7,6 +7,9 @@ from email.mime.multipart import MIMEMultipart
 from web3 import Web3, HTTPProvider
 import json
 
+AUTHORITY_EMAIL="sudheerthadikonda0605@gmail.com"
+AUTHORITY_ADDRESS="0x4ff1140b15A89085c81a063f3DA6E915100Eba13"
+
 # Configuration
 THINGSPEAK_CHANNEL_ID = "2853641"
 THINGSPEAK_API_URL = f"https://api.thingspeak.com/channels/{THINGSPEAK_CHANNEL_ID}/feed.json"
@@ -46,7 +49,7 @@ def connect_blockchain(wallet=0):
     """Connect to blockchain using the same configuration as app.py"""
     try:
         web3 = Web3(HTTPProvider(BLOCKCHAIN_SERVER))
-        if not web3.is_connected():
+        if not web3.isConnected():  # Changed from is_connected() to isConnected()
             raise Exception("Failed to connect to blockchain server")
         
         print('Connected with Blockchain Server')
@@ -73,12 +76,15 @@ def connect_blockchain(wallet=0):
 def send_blockchain_notification(contract, web3, user_wallet, alert_type, message, parameter, value):
     """Send notification using the contract's addNotification function"""
     try:
+        # Convert user_wallet to checksum address
+        user_wallet = Web3.toChecksumAddress(user_wallet)
+        
         tx_hash = contract.functions.addNotification(
-            user_wallet,
-            alert_type,
-            message,
-            parameter,
-            value
+            user_wallet,  # address type
+            str(alert_type),  # string type
+            str(message),  # string type
+            str(parameter),  # string type
+            str(value)  # string type
         ).transact({
             'from': web3.eth.default_account,
             'gas': 3000000
@@ -102,100 +108,92 @@ def check_thingspeak():
             return
 
         last_record = data['feeds'][-1]
+        print(last_record)
         
         # Extract values
-        power_theft = last_record.get('field4') == '1'
-        water_theft = last_record.get('field6') == '1'
+        power_theft = last_record.get('field4') == None
+        water_theft = last_record.get('field6') == None
         
         if power_theft or water_theft:
             contract, web3 = connect_blockchain()
             if not contract or not web3:
                 return
             
-            # Get all users from the contract
-            user_addresses = contract.functions.userAddresses().call()
+            # Use a single wallet address instead of getting all users
+            wallet = AUTHORITY_ADDRESS  # Replace with your wallet address
             
-            for wallet in user_addresses:
-                if power_theft:
-                    power_alert = {
-                        'type': 'POWER',
-                        'message': 'Power theft detected!',
-                        'parameter': 'Power Consumption',
-                        'value': f"{last_record.get('field2')} W"
-                    }
-                    
-                    # Get user data from contract
-                    user_data = contract.functions.users(wallet).call()
-                    user_email = user_data[3]  # Email is at index 3 in the User struct
-                    
-                    # Send email
-                    email_subject = "⚠️ Power Theft Alert - Theft Detection System"
-                    email_body = f"""
-                    <html>
-                        <body>
-                            <h2>⚠️ Power Theft Alert</h2>
-                            <p>A power theft has been detected in your system.</p>
-                            <p><strong>Details:</strong></p>
-                            <ul>
-                                <li>Current Power: {last_record.get('field2')} W</li>
-                                <li>Current: {last_record.get('field1')} A</li>
-                                <li>Energy: {last_record.get('field3')} kWh</li>
-                                <li>Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</li>
-                            </ul>
-                            <p>Please check your system immediately.</p>
-                        </body>
-                    </html>
-                    """
-                    send_email(user_email, email_subject, email_body)
-                    
-                    # Send blockchain notification
-                    send_blockchain_notification(
-                        contract, web3, wallet,
-                        power_alert['type'],
-                        power_alert['message'],
-                        power_alert['parameter'],
-                        power_alert['value']
-                    )
+            if power_theft:
+                power_alert = {
+                    'type': 'POWER',
+                    'message': 'Power theft detected!',
+                    'parameter': 'Power Consumption',
+                    'value': f"{last_record.get('field2')} W"
+                }
+                                
+                # Send email
+                email_subject = "⚠️ Power Theft Alert - Theft Detection System"
+                email_body = f"""
+                <html>
+                    <body>
+                        <h2>⚠️ Power Theft Alert</h2>
+                        <p>A power theft has been detected in your system.</p>
+                        <p><strong>Details:</strong></p>
+                        <ul>
+                            <li>Current Power: {last_record.get('field2')} W</li>
+                            <li>Current: {last_record.get('field1')} A</li>
+                            <li>Energy: {last_record.get('field3')} kWh</li>
+                            <li>Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</li>
+                        </ul>
+                        <p>Please check your system immediately.</p>
+                    </body>
+                </html>
+                """
+                send_email(AUTHORITY_EMAIL, email_subject, email_body)
                 
-                if water_theft:
-                    water_alert = {
-                        'type': 'WATER',
-                        'message': 'Water theft detected!',
-                        'parameter': 'Flow Difference',
-                        'value': f"Main: {last_record.get('field4')} L/min, User: {last_record.get('field5')} L/min"
-                    }
-                    
-                    # Get user data from contract
-                    user_data = contract.functions.users(wallet).call()
-                    user_email = user_data[3]  # Email is at index 3 in the User struct
-                    
-                    # Send email
-                    email_subject = "⚠️ Water Theft Alert - Theft Detection System"
-                    email_body = f"""
-                    <html>
-                        <body>
-                            <h2>⚠️ Water Theft Alert</h2>
-                            <p>A water theft has been detected in your system.</p>
-                            <p><strong>Details:</strong></p>
-                            <ul>
-                                <li>Main Flow: {last_record.get('field4')} L/min</li>
-                                <li>User Flow: {last_record.get('field5')} L/min</li>
-                                <li>Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</li>
-                            </ul>
-                            <p>Please check your system immediately.</p>
-                        </body>
-                    </html>
-                    """
-                    send_email(user_email, email_subject, email_body)
-                    
-                    # Send blockchain notification
-                    send_blockchain_notification(
-                        contract, web3, wallet,
-                        water_alert['type'],
-                        water_alert['message'],
-                        water_alert['parameter'],
-                        water_alert['value']
-                    )
+                # Send blockchain notification
+                send_blockchain_notification(
+                    contract, web3, wallet,
+                    power_alert['type'],
+                    power_alert['message'],
+                    power_alert['parameter'],
+                    power_alert['value']
+                )
+            
+            if water_theft:
+                water_alert = {
+                    'type': 'WATER',
+                    'message': 'Water theft detected!',
+                    'parameter': 'Flow Difference',
+                    'value': f"Main: {last_record.get('field4')} L/min, User: {last_record.get('field5')} L/min"
+                }
+                
+                # Send email
+                email_subject = "⚠️ Water Theft Alert - Theft Detection System"
+                email_body = f"""
+                <html>
+                    <body>
+                        <h2>⚠️ Water Theft Alert</h2>
+                        <p>A water theft has been detected in your system.</p>
+                        <p><strong>Details:</strong></p>
+                        <ul>
+                            <li>Main Flow: {last_record.get('field4')} L/min</li>
+                            <li>User Flow: {last_record.get('field5')} L/min</li>
+                            <li>Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</li>
+                        </ul>
+                        <p>Please check your system immediately.</p>
+                    </body>
+                </html>
+                """
+                send_email(AUTHORITY_EMAIL, email_subject, email_body)
+                
+                # Send blockchain notification
+                send_blockchain_notification(
+                    contract, web3, wallet,
+                    water_alert['type'],
+                    water_alert['message'],
+                    water_alert['parameter'],
+                    water_alert['value']
+                )
 
     except requests.RequestException as e:
         print(f"❌ API Request error: {str(e)}")
